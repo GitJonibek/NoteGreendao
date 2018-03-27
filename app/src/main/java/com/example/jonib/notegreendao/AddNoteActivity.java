@@ -69,13 +69,13 @@ public class AddNoteActivity extends AppCompatActivity {
 
         Note note = new Note();
         note.setTitle(title.getText().toString());
-        note.setTitle(description.getText().toString());
+        note.setDescription(description.getText().toString());
         note.setImage(imageToByte(imageView));
         note.setDate(date.toString());
 
         NoteDaoApp.getNoteDao().insert(note);
         setResult(RESULT_OK);
-
+        Toast.makeText(this, "Added Successfully!", Toast.LENGTH_LONG).show();
         finish();
     }
 

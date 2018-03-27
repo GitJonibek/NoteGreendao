@@ -21,6 +21,7 @@ public class NoteDao extends AbstractDao<Note, Long> {
      * Properties of entity Note.<br/>
      * Can be used for QueryBuilder and for referencing column names.
      */
+
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Title = new Property(1, String.class, "Title", false, "TITLE");
@@ -28,7 +29,6 @@ public class NoteDao extends AbstractDao<Note, Long> {
         public final static Property Image = new Property(3, byte[].class, "Image", false, "IMAGE");
         public final static Property Date = new Property(4, String.class, "Date", false, "DATE");
     }
-
 
     public NoteDao(DaoConfig config) {
         super(config);
