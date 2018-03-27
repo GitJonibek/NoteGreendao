@@ -7,10 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.jonib.notegreendao.R;
 import com.example.jonib.notegreendao.db.Note;
 
@@ -20,71 +18,57 @@ import java.util.List;
  * Created by jonib on 3/26/2018.
  */
 
-public class CustomViewAdapter extends BaseAdapter {
+public class CustomViewAdapter extends RecyclerView.Adapter<CustomViewAdapter.CustomViewHolder> {
 
     List<Note> list;
     Context context;
-    private int layout;
 
-    public CustomViewAdapter(Context context, int layout, List<Note> list){
-        this.list = list;
+    public CustomViewAdapter(Context context, List<Note> list){
         this.context = context;
-        this.layout = layout;
+        this.list = list;
     }
 
     @Override
-    public int getCount() {
+    public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.list_items_layout, parent, false);
+        return new CustomViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(CustomViewHolder holder, int position) {
+
+        Note note = list.get(position);
+
+        holder.title.setText(note.getTitle());
+
+        if(note.getDescription() != null)
+            holder.description.setText(note.getDescription());
+        else
+            holder.description.setText("No Description!");
+
+        Bitmap bitmap = BitmapFactory.decodeFile(note.getImagePath());
+        holder.imageView.setImageBitmap(bitmap);
+
+        holder.date.setText(note.getDate());
+
+    }
+
+    @Override
+    public int getItemCount() {
         return list.size();
     }
 
-    @Override
-    public Object getItem(int i) {
-        return list.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-
-        View row = view;
-        CustomViewHolder viewHolder = new CustomViewHolder();
-
-        if(row == null){
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-            row = inflater.inflate(layout, null);
-
-            viewHolder.title = row.findViewById(R.id.itemTitle);
-            viewHolder.description = row.findViewById(R.id.itemDescription);
-            viewHolder.imageView = row.findViewById(R.id.itemImage);
-            viewHolder.date = row.findViewById(R.id.itemDate);
-            row.setTag(viewHolder);
-
-        }else{
-            viewHolder = (CustomViewHolder) row.getTag();
-        }
-
-        Note note = list.get(i);
-        viewHolder.title.setText(note.getTitle().toString());
-        if(note.getDescription() == null)
-            viewHolder.description.setText("No description!");
-        else
-            viewHolder.description.setText(note.getDescription().toString());
-
-        byte[] noteImage = note.getImage();
-        Bitmap bitmap = BitmapFactory.decodeByteArray(noteImage, 0, noteImage.length);
-        viewHolder.imageView.setImageBitmap(bitmap);
-
-        viewHolder.date.setText(note.getDate().toString());
-
-        return view;
-    }
-
-    public class CustomViewHolder {
+    public class CustomViewHolder extends RecyclerView.ViewHolder{
         public TextView title, description, date;
         public ImageView imageView;
+
+        public CustomViewHolder(View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.itemImage);
+            title = itemView.findViewById(R.id.itemTitle);
+            description = itemView.findViewById(R.id.itemDescription);
+            date = itemView.findViewById(R.id.itemDate);
+        }
     }
+
 }

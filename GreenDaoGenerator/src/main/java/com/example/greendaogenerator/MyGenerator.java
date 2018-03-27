@@ -30,7 +30,7 @@ public class MyGenerator {
         note.addIdProperty().primaryKey().autoincrement();
         note.addStringProperty("Title").notNull();
         note.addStringProperty("Description");
-        note.addByteArrayProperty("Image");
+        note.addStringProperty("ImagePath");
         note.addStringProperty("Date");
         return note;
     }

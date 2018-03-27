@@ -1,16 +1,20 @@
 package com.example.jonib.notegreendao;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,8 +26,12 @@ import android.widget.Toast;
 import com.example.jonib.notegreendao.db.Note;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,6 +43,7 @@ public class AddNoteActivity extends AppCompatActivity {
     ImageView imageView;
 
     private final int REQUEST_CODE_GALLERY = 999;
+    private String fileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +52,34 @@ public class AddNoteActivity extends AppCompatActivity {
 
         initComponents();
 
+    }
+
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    public File getPrivateAlbumStorageDir(Context context, String albumName) {
+
+        File file = new File(context.getExternalFilesDir( Environment.DIRECTORY_PICTURES), albumName);
+
+        if (!file.mkdirs()) {
+            Toast.makeText(this, "Directory not created!", Toast.LENGTH_LONG).show();
+        }
+
+        return file;
     }
 
     public void initComponents(){
@@ -70,16 +107,46 @@ public class AddNoteActivity extends AppCompatActivity {
         Note note = new Note();
         note.setTitle(title.getText().toString());
         note.setDescription(description.getText().toString());
-        note.setImage(imageToByte(imageView));
+        note.setImagePath(saveToInternalStorage(getImageBitmap(imageView)));
         note.setDate(date.toString());
-
         NoteDaoApp.getNoteDao().insert(note);
         setResult(RESULT_OK);
         Toast.makeText(this, "Added Successfully!", Toast.LENGTH_LONG).show();
-        finish();
+
     }
 
     public void NoteListFunction(View view) {
+    }
+
+    private String saveToInternalStorage(Bitmap bitmapImage){
+
+        fileName = getPictureName();
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        // Create imageDir
+        File mypath = new File(directory, fileName);
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return directory.getAbsolutePath();
+    }
+
+    private Bitmap getImageBitmap(ImageView imageView){
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        return bitmap;
     }
 
     private byte[] imageToByte(ImageView imageView) {
@@ -106,15 +173,22 @@ public class AddNoteActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    public String getPictureName(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String timestamp = sdf.format(new java.util.Date());
+        return  "Image_" + timestamp + ".jpg";
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if(requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null){
             Uri uri = data.getData();
             try {
-                InputStream inputStream = getContentResolver().openInputStream(uri);
 
+                InputStream inputStream = getContentResolver().openInputStream(uri);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
                 imageView.setImageBitmap(bitmap);
 
             } catch (FileNotFoundException e) {

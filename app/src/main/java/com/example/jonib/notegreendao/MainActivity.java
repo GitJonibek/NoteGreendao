@@ -1,14 +1,19 @@
 package com.example.jonib.notegreendao;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.jonib.notegreendao.adapter.CustomViewAdapter;
 import com.example.jonib.notegreendao.db.DaoMaster;
@@ -16,45 +21,47 @@ import com.example.jonib.notegreendao.db.DaoSession;
 import com.example.jonib.notegreendao.db.Note;
 import com.example.jonib.notegreendao.db.NoteDao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     CustomViewAdapter adapter;
-    ListView myListView;
+    RecyclerView myRecyclerView;
     List<Note> list;
 
-    private NoteDao noteDao;
+    private NoteDaoApp noteDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(this, "note-db", null);
-        SQLiteDatabase database = devOpenHelper.getWritableDatabase();
-        DaoMaster daoMaster = new DaoMaster(database);
-        DaoSession daoSession = daoMaster.newSession();
-        noteDao = daoSession.getNoteDao();
+        myRecyclerView = findViewById(R.id.recycler_view);
+        noteDao = new NoteDaoApp();
+        list = new ArrayList<>();
 
-        myListView = findViewById(R.id.myGridView);
-        list = noteDao.queryBuilder().where(NoteDao.Properties.Id.eq(1)).list();
-        adapter = new CustomViewAdapter(this, R.layout.list_items_layout, list);
-        myListView.setAdapter(adapter);
+        list = noteDao.getNoteDao().loadAll();
 
-        Log.d(noteDao.queryBuilder().where(NoteDao.Properties.Id.eq(1)).toString(), " -------------------------------");
 
-        List<Note> myList = noteDao.queryBuilder().where(NoteDao.Properties.Id.eq(1)).list();
+        //list.add(new Note(note.getId(), note.getTitle(), note.getDescription(), note.getImage(), note.getDate()));
 
-        list.add(new Note(
-                myList.get(0).getId(),
-                myList.get(0).getTitle(),
-                myList.get(0).getDescription(),
-                myList.get(0).getImage(),
-                myList.get(0).getDate()));
+        adapter = new CustomViewAdapter(MainActivity.this, list);
+        myRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        myRecyclerView.setAdapter(adapter);
 
         adapter.notifyDataSetChanged();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override

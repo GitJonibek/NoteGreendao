@@ -21,14 +21,14 @@ public class NoteDao extends AbstractDao<Note, Long> {
      * Properties of entity Note.<br/>
      * Can be used for QueryBuilder and for referencing column names.
      */
-
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Title = new Property(1, String.class, "Title", false, "TITLE");
         public final static Property Description = new Property(2, String.class, "Description", false, "DESCRIPTION");
-        public final static Property Image = new Property(3, byte[].class, "Image", false, "IMAGE");
+        public final static Property ImagePath = new Property(3, String.class, "ImagePath", false, "IMAGE_PATH");
         public final static Property Date = new Property(4, String.class, "Date", false, "DATE");
     }
+
 
     public NoteDao(DaoConfig config) {
         super(config);
@@ -45,7 +45,7 @@ public class NoteDao extends AbstractDao<Note, Long> {
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"TITLE\" TEXT NOT NULL ," + // 1: Title
                 "\"DESCRIPTION\" TEXT," + // 2: Description
-                "\"IMAGE\" BLOB," + // 3: Image
+                "\"IMAGE_PATH\" TEXT," + // 3: ImagePath
                 "\"DATE\" TEXT);"); // 4: Date
     }
 
@@ -70,9 +70,9 @@ public class NoteDao extends AbstractDao<Note, Long> {
             stmt.bindString(3, Description);
         }
  
-        byte[] Image = entity.getImage();
-        if (Image != null) {
-            stmt.bindBlob(4, Image);
+        String ImagePath = entity.getImagePath();
+        if (ImagePath != null) {
+            stmt.bindString(4, ImagePath);
         }
  
         String Date = entity.getDate();
@@ -96,9 +96,9 @@ public class NoteDao extends AbstractDao<Note, Long> {
             stmt.bindString(3, Description);
         }
  
-        byte[] Image = entity.getImage();
-        if (Image != null) {
-            stmt.bindBlob(4, Image);
+        String ImagePath = entity.getImagePath();
+        if (ImagePath != null) {
+            stmt.bindString(4, ImagePath);
         }
  
         String Date = entity.getDate();
@@ -118,7 +118,7 @@ public class NoteDao extends AbstractDao<Note, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // Title
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // Description
-            cursor.isNull(offset + 3) ? null : cursor.getBlob(offset + 3), // Image
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // ImagePath
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // Date
         );
         return entity;
@@ -129,7 +129,7 @@ public class NoteDao extends AbstractDao<Note, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setTitle(cursor.getString(offset + 1));
         entity.setDescription(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setImage(cursor.isNull(offset + 3) ? null : cursor.getBlob(offset + 3));
+        entity.setImagePath(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setDate(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
      }
     
