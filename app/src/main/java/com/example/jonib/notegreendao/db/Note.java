@@ -20,6 +20,7 @@ public class Note {
     private String Title;
     private String Description;
     private String ImagePath;
+    private String ImageName;
     private String Date;
 
     // KEEP FIELDS - put your custom fields here
@@ -34,11 +35,12 @@ public class Note {
     }
 
     @Generated
-    public Note(Long id, String Title, String Description, String ImagePath, String Date) {
+    public Note(Long id, String Title, String Description, String ImagePath, String ImageName, String Date) {
         this.id = id;
         this.Title = Title;
         this.Description = Description;
         this.ImagePath = ImagePath;
+        this.ImageName = ImageName;
         this.Date = Date;
     }
 
@@ -74,6 +76,14 @@ public class Note {
 
     public void setImagePath(String ImagePath) {
         this.ImagePath = ImagePath;
+    }
+
+    public String getImageName() {
+        return ImageName;
+    }
+
+    public void setImageName(String ImageName) {
+        this.ImageName = ImageName;
     }
 
     public String getDate() {

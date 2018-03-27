@@ -9,9 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.jonib.notegreendao.R;
 import com.example.jonib.notegreendao.db.Note;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
@@ -40,15 +45,11 @@ public class CustomViewAdapter extends RecyclerView.Adapter<CustomViewAdapter.Cu
         Note note = list.get(position);
 
         holder.title.setText(note.getTitle());
-
         if(note.getDescription() != null)
             holder.description.setText(note.getDescription());
         else
             holder.description.setText("No Description!");
-
-        Bitmap bitmap = BitmapFactory.decodeFile(note.getImagePath());
-        holder.imageView.setImageBitmap(bitmap);
-
+        holder.imageView.setImageBitmap(loadImageFromStorage(note.getImagePath(), note.getImageName()));
         holder.date.setText(note.getDate());
 
     }
@@ -56,6 +57,18 @@ public class CustomViewAdapter extends RecyclerView.Adapter<CustomViewAdapter.Cu
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    private Bitmap loadImageFromStorage(String path, String fileName) {
+        Bitmap bitmap = null;
+        try {
+            File file = new File(path, fileName);
+            bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
+        }
+        catch (FileNotFoundException e){
+            Toast.makeText(context, "Couldn't load image!", Toast.LENGTH_LONG).show();
+        }
+        return bitmap;
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder{

@@ -41,10 +41,7 @@ public class MainActivity extends AppCompatActivity {
         noteDao = new NoteDaoApp();
         list = new ArrayList<>();
 
-        list = noteDao.getNoteDao().loadAll();
-
-
-        //list.add(new Note(note.getId(), note.getTitle(), note.getDescription(), note.getImage(), note.getDate()));
+        list = noteDao.getNoteDao().queryBuilder().where(NoteDao.Properties.Id.gt(0L)).list();
 
         adapter = new CustomViewAdapter(MainActivity.this, list);
         myRecyclerView.setLayoutManager(new LinearLayoutManager(this));

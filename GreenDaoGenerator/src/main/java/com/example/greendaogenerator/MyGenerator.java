@@ -31,6 +31,7 @@ public class MyGenerator {
         note.addStringProperty("Title").notNull();
         note.addStringProperty("Description");
         note.addStringProperty("ImagePath");
+        note.addStringProperty("ImageName");
         note.addStringProperty("Date");
         return note;
     }

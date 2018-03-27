@@ -45,6 +45,10 @@ public class AddNoteActivity extends AppCompatActivity {
     private final int REQUEST_CODE_GALLERY = 999;
     private String fileName;
 
+    public AddNoteActivity(String fileName){ this.fileName = fileName; }
+
+    public AddNoteActivity(){}
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,34 +56,6 @@ public class AddNoteActivity extends AppCompatActivity {
 
         initComponents();
 
-    }
-
-    public boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isExternalStorageReadable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) ||
-                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            return true;
-        }
-        return false;
-    }
-
-    public File getPrivateAlbumStorageDir(Context context, String albumName) {
-
-        File file = new File(context.getExternalFilesDir( Environment.DIRECTORY_PICTURES), albumName);
-
-        if (!file.mkdirs()) {
-            Toast.makeText(this, "Directory not created!", Toast.LENGTH_LONG).show();
-        }
-
-        return file;
     }
 
     public void initComponents(){
@@ -105,10 +81,13 @@ public class AddNoteActivity extends AppCompatActivity {
         String date = df.format(Calendar.getInstance().getTime());
 
         Note note = new Note();
+
         note.setTitle(title.getText().toString());
         note.setDescription(description.getText().toString());
         note.setImagePath(saveToInternalStorage(getImageBitmap(imageView)));
+        note.setImageName(fileName);
         note.setDate(date.toString());
+
         NoteDaoApp.getNoteDao().insert(note);
         setResult(RESULT_OK);
         Toast.makeText(this, "Added Successfully!", Toast.LENGTH_LONG).show();
@@ -149,12 +128,10 @@ public class AddNoteActivity extends AppCompatActivity {
         return bitmap;
     }
 
-    private byte[] imageToByte(ImageView imageView) {
-        Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
+    private String getPictureName(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String timestamp = sdf.format(new java.util.Date());
+        return  "Image_" + timestamp + ".jpg";
     }
 
     @Override
@@ -171,12 +148,6 @@ public class AddNoteActivity extends AppCompatActivity {
             return;
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    public String getPictureName(){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-        String timestamp = sdf.format(new java.util.Date());
-        return  "Image_" + timestamp + ".jpg";
     }
 
     @Override
@@ -197,4 +168,13 @@ public class AddNoteActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    private byte[] imageToByte(ImageView imageView) {
+        Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
+    }
+
 }
