@@ -27,28 +27,35 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     CustomViewAdapter adapter;
-    RecyclerView myRecyclerView;
+    ListView myRecyclerView;
     List<Note> list;
 
     private NoteDaoApp noteDao;
+    private NoteDao noteD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        myRecyclerView = findViewById(R.id.recycler_view);
-        noteDao = new NoteDaoApp();
-        list = new ArrayList<>();
+        initComponents();
 
         list = noteDao.getNoteDao().queryBuilder().where(NoteDao.Properties.Id.gt(0L)).list();
-
         adapter = new CustomViewAdapter(MainActivity.this, list);
-        myRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         myRecyclerView.setAdapter(adapter);
 
         adapter.notifyDataSetChanged();
 
+    }
+
+    public void initComponents(){
+        myRecyclerView = findViewById(R.id.recycler_view);
+        noteDao = new NoteDaoApp();
+        list = new ArrayList<>();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override
