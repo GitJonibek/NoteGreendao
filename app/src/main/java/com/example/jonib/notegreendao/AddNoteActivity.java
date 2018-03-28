@@ -78,32 +78,24 @@ public class AddNoteActivity extends AppCompatActivity {
 
     //*** Fix some issues here!!!!!!!
     public void addNoteFunction(View view) {
-        clearComponents();
 
         DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
         String date = df.format(Calendar.getInstance().getTime());
 
         Note note = new Note();
-        if(title.getText().toString() != null || description.getText().toString() != null){
-            note.setTitle(title.getText().toString());
-            note.setDescription(description.getText().toString());
-            note.setImagePath(saveToInternalStorage(getImageBitmap(imageView)));
-            note.setImageName(fileName);
-            note.setDate(date.toString());
+        note.setTitle(title.getText().toString());
+        note.setDescription(description.getText().toString());
+        note.setImagePath(saveToInternalStorage(getImageBitmap(imageView)));
+        note.setImageName(fileName);
+        note.setDate(date.toString());
 
-            NoteDaoApp.getNoteDao().insert(note);
+        NoteDaoApp.getNoteDao().insert(note);
 
-            setResult(RESULT_OK);
-            Toast.makeText(this, "Added Successfully!", Toast.LENGTH_LONG).show();
+        setResult(RESULT_OK);
+        Toast.makeText(this, "Added Successfully!", Toast.LENGTH_LONG).show();
 
-        }else {
-            if(title.getText().toString() == "") {
-                Toast.makeText(getApplicationContext(), "Title field is required!", Toast.LENGTH_LONG).show();
-            }
-            if(description.getText().toString() == "") {
-                Toast.makeText(getApplicationContext(), "Description field is required!", Toast.LENGTH_LONG).show();
-            }
-        }
+        clearComponents();
+
     }
 
     public void clearComponents(){

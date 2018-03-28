@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,23 +19,24 @@ import com.example.jonib.notegreendao.db.Note;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by jonib on 3/26/2018.
  */
 
-public class CustomViewAdapter extends BaseAdapter {
+public class CustomViewAdapter extends RecyclerView.Adapter<CustomViewAdapter.CustomViewHolder> {
 
     private List<Note> list;
     private Context context;
-    private LayoutInflater inflater;
-    private int lastPosition = -1;
+    private final LayoutInflater inflater;
+    private int layout;
 
-    public CustomViewAdapter(Context context, List<Note> list){
+    public CustomViewAdapter(Context context, int layout, List<Note> list){
+        this.layout = layout;
         this.context = context;
         this.list = list;
+        inflater = LayoutInflater.from(context);
     }
 
     private Bitmap loadImageFromStorage(String path, String fileName) {
@@ -53,49 +52,19 @@ public class CustomViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        return list.size();
+    public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        View view = inflater.inflate(layout, parent, false);
+        CustomViewHolder holder = new CustomViewHolder(view);
+
+        return holder;
+
     }
 
     @Override
-    public Object getItem(int i) {
-        return list.get(i);
-    }
+    public void onBindViewHolder(CustomViewHolder holder, int position) {
 
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
         Note note = list.get(position);
-
-        CustomViewHolder holder;
-        final View result;
-
-        if(view == null){
-            holder = new CustomViewHolder();
-            inflater = LayoutInflater.from(context);
-            view = inflater.inflate(R.layout.list_items_layout, viewGroup, false);
-
-            holder.title = view.findViewById(R.id.itemTitle);
-            holder.description = view.findViewById(R.id.itemDescription);
-            holder.imageView = view.findViewById(R.id.itemImage);
-            holder.date = view.findViewById(R.id.itemDate);
-
-            result = view;
-
-            view.setTag(holder);
-
-        }else{
-            holder = (CustomViewHolder) view.getTag();
-            result = view;
-        }
-
-        Animation animation = AnimationUtils.loadAnimation(context, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
-        result.startAnimation(animation);
-        lastPosition = position;
 
         holder.title.setText(note.getTitle());
         if(note.getDescription() != null)
@@ -105,12 +74,28 @@ public class CustomViewAdapter extends BaseAdapter {
         holder.imageView.setImageBitmap(loadImageFromStorage(note.getImagePath(), note.getImageName()));
         holder.date.setText(note.getDate());
 
-        return result;
+        /*Animation animation = AnimationUtils.loadAnimation(context, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
+        view.startAnimation(animation);
+        lastPosition = position;
+        holder.imageView.setTag(position);*/
     }
 
-    public class CustomViewHolder {
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    public class CustomViewHolder extends RecyclerView.ViewHolder{
         public TextView title, description, date;
         public ImageView imageView;
+
+        public CustomViewHolder(View itemView) {
+            super(itemView);
+            title = itemView.findViewById(R.id.itemTitle);
+            description = itemView.findViewById(R.id.itemDescription);
+            imageView = itemView.findViewById(R.id.itemImage);
+            date = itemView.findViewById(R.id.itemDate);
+        }
     }
 
 }
