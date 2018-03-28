@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <gradient android:startColor="#3498db"
-        android:endColor="#34bfdb"
+    <gradient android:startColor="@color/popup_image_back_color"
+        android:endColor="@color/popup_image_back_color"
         android:angle="270"/>
     <corners android:radius="10dp"/>
 </shape>

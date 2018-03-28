@@ -1,25 +1,16 @@
 package com.example.jonib.notegreendao;
 
-import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.jonib.notegreendao.db.Note;
 import com.example.jonib.notegreendao.db.NoteDao;
-import com.example.jonib.notegreendao.popup_notifier.PopUpActivity;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,10 +20,9 @@ public class MainViewActivity extends AppCompatActivity {
 
     private NoteDaoApp noteDaoApp;
     private TextView title, description;
-    private ImageView imageView, popupImageView;
+    private ImageView imageView;
     private long id = 0L;
     private List<Note> list;
-    private PopupWindow popupWindow;
     private Bitmap bitmap;
 
     @Override
@@ -47,10 +37,13 @@ public class MainViewActivity extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), PopUpActivity.class);
-                intent.putExtra("path", list.get(0).getImagePath());
-                intent.putExtra("name", list.get(0).getImageName());
-                startActivity(intent);
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainViewActivity.this);
+                View view1 = getLayoutInflater().inflate(R.layout.dialog_image_popup, null);
+                ImageView imageView = view1.findViewById(R.id.popup_imageView);
+                imageView.setImageBitmap(loadImageFromStorage(list.get(0).getImagePath(), list.get(0).getImageName()));
+                mBuilder.setView(view1);
+                AlertDialog dialog = mBuilder.create();
+                dialog.show();
             }
         });
 

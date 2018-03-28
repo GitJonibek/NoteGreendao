@@ -29,9 +29,6 @@
             android:name=".MainViewActivity"
             android:parentActivityName=".MainActivity"/>
 
-        <activity
-            android:name=".popup_notifier.PopUpActivity"
-            android:theme="@style/AppTheme.PopUp"/>
     </application>
 
 </manifest>
