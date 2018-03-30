@@ -67,17 +67,10 @@ public class CustomViewAdapter extends RecyclerView.Adapter<CustomViewAdapter.Cu
         Note note = list.get(position);
 
         holder.title.setText(note.getTitle());
-        if(note.getDescription() != null)
-            holder.description.setText(note.getDescription());
-        else
-            holder.description.setText("No Description!");
+        holder.description.setText(note.getDescription());
         holder.imageView.setImageBitmap(loadImageFromStorage(note.getImagePath(), note.getImageName()));
         holder.date.setText(note.getDate());
 
-        /*Animation animation = AnimationUtils.loadAnimation(context, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
-        view.startAnimation(animation);
-        lastPosition = position;
-        holder.imageView.setTag(position);*/
     }
 
     @Override

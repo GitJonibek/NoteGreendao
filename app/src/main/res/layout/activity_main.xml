@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/mainLayoutId"
     android:orientation="vertical"
     android:gravity="center|top"
     android:padding="5dp"
@@ -12,7 +13,29 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
+        app:pressedTranslationZ="12dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        app:fastScrollEnabled="true"
+        app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
+        app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
+        app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
+        app:fastScrollVerticalTrackDrawable="@drawable/line_drawable">
+    </android.support.v7.widget.RecyclerView>
 
-</LinearLayout>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/add_item_icon"
+        app:backgroundTint="@color/colorPrimary"
+        android:clickable="true"
+        android:onClick="addNoteFunction"
+        android:layout_gravity="bottom|right|end"
+        android:layout_margin="15dp"
+        android:focusable="true"
+        app:pressedTranslationZ="12dp"
+        tools:ignore="RtlHardcoded" />
+
+</android.support.design.widget.CoordinatorLayout>

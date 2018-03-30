@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">NoteGreendao</string>
     <string name="actionAdd">Add</string>
+    <string name="title">Title</string>
+    <string name="description">description</string>
+    <string name="todo">TODO</string>
+    <string name="date_of_item">Date of item</string>
 </resources>

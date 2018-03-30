@@ -1,5 +1,6 @@
 package com.example.jonib.notegreendao;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AlertDialog;
@@ -18,12 +19,10 @@ import java.util.List;
 
 public class MainViewActivity extends AppCompatActivity {
 
-    private NoteDaoApp noteDaoApp;
     private TextView title, description;
     private ImageView imageView;
     private long id = 0L;
     private List<Note> list;
-    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,26 +30,29 @@ public class MainViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_view);
         initComponents();
 
-        list = noteDaoApp.getNoteDao().queryBuilder().where(NoteDao.Properties.Id.eq(id)).list();
+        list = NoteDaoApp.getNoteDao().queryBuilder().where(NoteDao.Properties.Id.eq(id)).list();
         setMainViews(list);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainViewActivity.this);
-                View view1 = getLayoutInflater().inflate(R.layout.dialog_image_popup, null);
-                ImageView imageView = view1.findViewById(R.id.popup_imageView);
-                imageView.setImageBitmap(loadImageFromStorage(list.get(0).getImagePath(), list.get(0).getImageName()));
-                mBuilder.setView(view1);
-                AlertDialog dialog = mBuilder.create();
-                dialog.show();
+                showPopUpImage();
             }
         });
+    }
 
+    private void showPopUpImage() {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainViewActivity.this);
+        @SuppressLint("InflateParams")
+        View myView = getLayoutInflater().inflate(R.layout.dialog_image_popup, null);
+        ImageView imageView = myView.findViewById(R.id.popup_imageView);
+        imageView.setImageBitmap(loadImageFromStorage(list.get(0).getImagePath(), list.get(0).getImageName()));
+        mBuilder.setView(myView);
+        AlertDialog dialog = mBuilder.create();
+        dialog.show();
     }
 
     public void initComponents(){
-        noteDaoApp = new NoteDaoApp();
         title = findViewById(R.id.mainViewTitle);
         description = findViewById(R.id.mainViewDescription);
         imageView = findViewById(R.id.mainViewImage);
@@ -59,7 +61,7 @@ public class MainViewActivity extends AppCompatActivity {
     }
 
     public void setMainViews(List<Note> list){
-        bitmap = loadImageFromStorage(list.get(0).getImagePath(), list.get(0).getImageName());
+        Bitmap bitmap = loadImageFromStorage(list.get(0).getImagePath(), list.get(0).getImageName());
         title.setText(list.get(0).getTitle());
         description.setText(list.get(0).getDescription());
         imageView.setImageBitmap(bitmap);
