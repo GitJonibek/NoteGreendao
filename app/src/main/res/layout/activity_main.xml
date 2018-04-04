@@ -8,7 +8,6 @@
     android:id="@+id/mainLayoutId"
     android:orientation="vertical"
     android:gravity="center|top"
-    android:padding="5dp"
     tools:context="com.example.jonib.notegreendao.MainActivity">
 
     <android.support.v7.widget.RecyclerView
@@ -17,13 +16,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:fastScrollEnabled="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
         app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
         app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
         app:fastScrollVerticalTrackDrawable="@drawable/line_drawable">
     </android.support.v7.widget.RecyclerView>
-
-
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"

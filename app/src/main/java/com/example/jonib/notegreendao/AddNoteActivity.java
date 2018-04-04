@@ -8,11 +8,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,9 +25,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.widget.Toolbar;
+
 import com.example.jonib.notegreendao.db.Note;
+import com.example.jonib.notegreendao.db.NoteDao;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,12 +40,14 @@ import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Random;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AddNoteActivity extends AppCompatActivity {
 
     EditText title, description;
     FloatingActionButton btnChooseImage, btnAddNote;
-    ImageView imageView;
+    CircleImageView imageView;
     LinearLayout upToDown, downToUp;
     Animation animationUp, animationDown;
 
@@ -54,6 +64,73 @@ public class AddNoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_note);
 
         initComponents();
+        @SuppressLint("SimpleDateFormat")
+        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
+        final String date = df.format(Calendar.getInstance().getTime());
+
+        final int[] array = new int[]{
+                getResources().getColor(R.color.red), getResources().getColor(R.color.purple),
+                getResources().getColor(R.color.indigo), getResources().getColor(R.color.grey),
+                getResources().getColor(R.color.green), getResources().getColor(R.color.dark_blue),
+                getResources().getColor(R.color.cyan), getResources().getColor(R.color.brown),
+                getResources().getColor(R.color.blue_grey)};
+
+
+        Bundle bundle = getIntent().getExtras();
+
+        if(bundle != null) {
+            if(bundle.containsKey("ID")){
+                long id = (long) getIntent().getExtras().get("ID");
+                final Note note = NoteDaoApp.getNoteDao().queryBuilder().where(NoteDao.Properties.Id.eq(id)).unique();
+
+                imageView.setImageBitmap(loadImageFromStorage(note.getImagePath(), note.getImageName()));
+                title.setText(note.getTitle());
+                description.setText(note.getDescription());
+
+                btnAddNote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        note.setTitle(title.getText().toString());
+                        note.setDescription(description.getText().toString());
+                        note.setImagePath(saveToInternalStorage(getImageBitmap(imageView)));
+                        note.setImageName(getPictureName());
+                        note.setItemColor(array[new Random().nextInt(array.length)]);
+                        note.setDate(date);
+
+                        NoteDaoApp.getNoteDao().update(note);
+
+                        setResult(RESULT_OK);
+                        Toast.makeText(getApplicationContext(), "Updated Successfully!", Toast.LENGTH_LONG).show();
+
+                        clearComponents();
+                    }
+                });
+            }
+
+        }else{
+
+            btnAddNote.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Note note = new Note();
+                    note.setTitle(title.getText().toString());
+                    note.setDescription(description.getText().toString());
+                    note.setImagePath(saveToInternalStorage(getImageBitmap(imageView)));
+                    note.setImageName(getPictureName());
+                    note.setItemColor(array[new Random().nextInt(array.length)]);
+                    note.setDate(date.toString());
+
+                    NoteDaoApp.getNoteDao().insert(note);
+
+                    setResult(RESULT_OK);
+                    Toast.makeText(getApplicationContext(), "Added Successfully!", Toast.LENGTH_LONG).show();
+
+                    clearComponents();
+                }
+            });
+        }
+
 
         upToDown.setAnimation(animationUp);
         downToUp.setAnimation(animationDown);
@@ -80,29 +157,6 @@ public class AddNoteActivity extends AppCompatActivity {
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                 REQUEST_CODE_GALLERY
         );
-    }
-
-    //*** Fix some issues here!!!!!!!
-    public void addNoteFunction(View view) {
-
-        @SuppressLint("SimpleDateFormat")
-        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
-        String date = df.format(Calendar.getInstance().getTime());
-
-        Note note = new Note();
-        note.setTitle(title.getText().toString());
-        note.setDescription(description.getText().toString());
-        note.setImagePath(saveToInternalStorage(getImageBitmap(imageView)));
-        note.setImageName(fileName);
-        note.setDate(date.toString());
-
-        NoteDaoApp.getNoteDao().insert(note);
-
-        setResult(RESULT_OK);
-        Toast.makeText(this, "Added Successfully!", Toast.LENGTH_LONG).show();
-
-        clearComponents();
-
     }
 
     public void clearComponents(){
@@ -172,28 +226,32 @@ public class AddNoteActivity extends AppCompatActivity {
         if(requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null){
             Uri uri = data.getData();
             try {
-
                 InputStream inputStream = null;
-                if (uri != null) {
-                    inputStream = getContentResolver().openInputStream(uri);
-                }
+                if (uri != null) { inputStream = getContentResolver().openInputStream(uri); }
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
                 imageView.setImageBitmap(bitmap);
+                imageView.setBorderWidth(10);
+                imageView.setBorderColor(Color.RED);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+
     }
 
-    private byte[] imageToByte(ImageView imageView) {
-        Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
+    private Bitmap loadImageFromStorage(String path, String fileName) {
+        Bitmap bitmap = null;
+        try {
+            File file = new File(path, fileName);
+            bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
+        }
+        catch (FileNotFoundException e){
+            Toast.makeText(getApplicationContext(), "Couldn't load image!", Toast.LENGTH_LONG).show();
+        }
+        return bitmap;
     }
 
 }

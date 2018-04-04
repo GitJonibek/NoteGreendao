@@ -41,9 +41,11 @@ dependencies {
     //bootstrap
     compile 'com.beardedhen:androidbootstrap:2.3.2'
 
-    // Glide
-//    implementation 'com.github.bumptech.glide:glide:4.6.1'
-//    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
 
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+
+    compile 'com.github.pavlospt:roundedletterview:1.2'
 
 }

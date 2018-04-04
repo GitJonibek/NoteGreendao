@@ -18,13 +18,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/itemImage"
-            android:layout_width="@android:dimen/notification_large_icon_height"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:src="@mipmap/ic_launcher"
-            android:contentDescription="@string/todo" />
+        <com.github.pavlospt.roundedletterview.RoundedLetterView
+            android:id="@+id/circle_textview_id"
+            android:layout_marginStart="5dp"
+            android:layout_width="50dp"
+            android:layout_gravity="center"
+            android:layout_height="50dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <TextView
-                    android:id="@+id/itemDescription"
+                    android:id="@+id/itemReminder"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/description"

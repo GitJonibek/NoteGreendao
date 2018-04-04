@@ -27,7 +27,8 @@ public class NoteDao extends AbstractDao<Note, Long> {
         public final static Property Description = new Property(2, String.class, "Description", false, "DESCRIPTION");
         public final static Property ImagePath = new Property(3, String.class, "ImagePath", false, "IMAGE_PATH");
         public final static Property ImageName = new Property(4, String.class, "ImageName", false, "IMAGE_NAME");
-        public final static Property Date = new Property(5, String.class, "Date", false, "DATE");
+        public final static Property ItemColor = new Property(5, Integer.class, "ItemColor", false, "ITEM_COLOR");
+        public final static Property Date = new Property(6, String.class, "Date", false, "DATE");
     }
 
 
@@ -48,7 +49,8 @@ public class NoteDao extends AbstractDao<Note, Long> {
                 "\"DESCRIPTION\" TEXT," + // 2: Description
                 "\"IMAGE_PATH\" TEXT," + // 3: ImagePath
                 "\"IMAGE_NAME\" TEXT," + // 4: ImageName
-                "\"DATE\" TEXT);"); // 5: Date
+                "\"ITEM_COLOR\" INTEGER," + // 5: ItemColor
+                "\"DATE\" TEXT);"); // 6: Date
     }
 
     /** Drops the underlying database table. */
@@ -82,9 +84,14 @@ public class NoteDao extends AbstractDao<Note, Long> {
             stmt.bindString(5, ImageName);
         }
  
+        Integer ItemColor = entity.getItemColor();
+        if (ItemColor != null) {
+            stmt.bindLong(6, ItemColor);
+        }
+ 
         String Date = entity.getDate();
         if (Date != null) {
-            stmt.bindString(6, Date);
+            stmt.bindString(7, Date);
         }
     }
 
@@ -113,9 +120,14 @@ public class NoteDao extends AbstractDao<Note, Long> {
             stmt.bindString(5, ImageName);
         }
  
+        Integer ItemColor = entity.getItemColor();
+        if (ItemColor != null) {
+            stmt.bindLong(6, ItemColor);
+        }
+ 
         String Date = entity.getDate();
         if (Date != null) {
-            stmt.bindString(6, Date);
+            stmt.bindString(7, Date);
         }
     }
 
@@ -132,7 +144,8 @@ public class NoteDao extends AbstractDao<Note, Long> {
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // Description
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // ImagePath
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // ImageName
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // Date
+            cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5), // ItemColor
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6) // Date
         );
         return entity;
     }
@@ -144,7 +157,8 @@ public class NoteDao extends AbstractDao<Note, Long> {
         entity.setDescription(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setImagePath(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setImageName(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setDate(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setItemColor(cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5));
+        entity.setDate(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
      }
     
     @Override
