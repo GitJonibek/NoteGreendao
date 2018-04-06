@@ -28,6 +28,11 @@
         <activity
             android:name=".MainViewActivity"
             android:parentActivityName=".MainActivity"/>
+        <receiver android:name=".service.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true"/>
+        <service android:name=".service.ReminderService"
+            android:enabled="true"/>
 
     </application>
 

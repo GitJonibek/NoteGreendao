@@ -5,4 +5,7 @@
     <string name="description">reminder</string>
     <string name="todo">TODO</string>
     <string name="date_of_item">Date of item</string>
+    <string name="remind_me">Remind me</string>
+    <string name="pick_the_date">Pick the date &amp; time</string>
+    <string name="reminder_date_time">Reminder date, time!</string>
 </resources>

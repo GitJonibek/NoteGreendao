@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,10 +64,10 @@ public class CustomViewAdapter extends RecyclerView.Adapter<CustomViewAdapter.Cu
 
         holder.title.setText(title);
         holder.description.setText(note.getDescription());
-        holder.circle.setTitleSize(100);
-        holder.circle.setBackgroundColor(note.getItemColor());
-        holder.circle.setTitleText(String.valueOf(t).toUpperCase());
+        holder.circleText.setBackgroundResource(R.drawable.alarm_icon);
         holder.date.setText(note.getDate());
+
+        holder.cardView.setCardBackgroundColor(note.getItemColor());
 
     }
 
@@ -75,15 +77,17 @@ public class CustomViewAdapter extends RecyclerView.Adapter<CustomViewAdapter.Cu
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder{
-        TextView title, description, date;
+        TextView title, description, date, circleText;
         RoundedLetterView circle;
+        CardView cardView;
 
         CustomViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.itemTitle);
             description = itemView.findViewById(R.id.itemReminder);
-            circle = itemView.findViewById(R.id.circle_textview_id);
+            circleText = itemView.findViewById(R.id.circle_textview_id);
             date = itemView.findViewById(R.id.itemDate);
+            cardView = itemView.findViewById(R.id.my_cardview_id);
         }
     }
 

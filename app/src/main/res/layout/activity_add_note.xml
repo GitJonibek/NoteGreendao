@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#323232"
     android:gravity="center|top"
     android:id="@+id/addNoteLayoutId"
     tools:context="com.example.jonib.notegreendao.AddNoteActivity">
@@ -31,20 +32,24 @@
                 android:padding="5dp"
                 android:gravity="center">
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <ImageView
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/default_background_image"
                     android:id="@+id/image_icon"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="fitXY" />
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:scaleType="fitXY"
+                    android:contentDescription="@string/todo" />
 
                 <EditText
+                    android:layout_marginTop="5dp"
+                    android:textColorHint="@color/colorGrey"
+                    android:textColor="@color/bootstrap_well_background"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:hint="@string/title"
                     android:id="@+id/note_title"/>
-
-
 
             </LinearLayout>
 
@@ -52,6 +57,7 @@
 
         <LinearLayout
             android:id="@+id/downToUpLayout"
+            android:background="#323232"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -63,11 +69,86 @@
                 tools:ignore="UselessParent">
 
                 <EditText
+                    android:textColorHint="@color/colorGrey"
+                    android:layout_margin="6dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="textStart"
                     android:hint="@string/description"
                     android:id="@+id/note_desc"/>
+
+                <LinearLayout
+                    android:layout_margin="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/alarm_icon"/>
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_marginStart="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/remind_me"
+                        android:textSize="20sp"
+                        android:textColor="@color/bootstrap_well_background"/>
+
+                    <Switch
+                        android:id="@+id/switch_alarm_on_off"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_margin="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.beardedhen.androidbootstrap.BootstrapButton
+                            android:id="@+id/date_time_picker"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/pick_the_date"
+                            android:onClick="pickTheDateAndTime"
+                            android:textColor="@color/bootstrap_well_background"
+                            tools:ignore="RelativeOverlap" />
+
+                        <EditText
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="5dp"
+                            android:id="@+id/date_time_field_id"
+                            android:editable="false"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|end|top"
+                            android:textColor="@color/bootstrap_well_background"
+                            tools:ignore="Deprecated,LabelFor,TextFields" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/date_and_time_text_id"
+                        android:layout_marginTop="15dp"
+                        android:textColor="@color/bootstrap_gray_light"
+                        android:layout_gravity="start"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reminder_date_time"/>
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
@@ -83,7 +164,7 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/green"
         app:layout_anchor="@id/viewA"
         app:pressedTranslationZ="12dp"
         app:layout_anchorGravity="bottom|right|end"
@@ -97,7 +178,7 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/green"
         app:layout_anchor="@id/viewB"
         app:pressedTranslationZ="12dp"
         app:layout_anchorGravity="bottom|right|end"
