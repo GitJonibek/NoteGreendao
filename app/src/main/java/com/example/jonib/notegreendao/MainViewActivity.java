@@ -30,15 +30,22 @@ public class MainViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_view);
         initComponents();
 
-        list = NoteDaoApp.getNoteDao().queryBuilder().where(NoteDao.Properties.Id.eq(id)).list();
-        setMainViews(list);
+        if(getIntent().getExtras() != null){
+            if(getIntent().getExtras().containsKey("ID")){
+                id = (long) getIntent().getExtras().get("ID");
+                list = NoteDaoApp.getNoteDao().queryBuilder().where(NoteDao.Properties.Id.eq(id)).list();
+                setMainViews(list);
 
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showPopUpImage();
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showPopUpImage();
+                    }
+                });
             }
-        });
+        }
+
+
     }
 
     private void showPopUpImage() {
@@ -57,7 +64,6 @@ public class MainViewActivity extends AppCompatActivity {
         description = findViewById(R.id.mainViewDescription);
         imageView = findViewById(R.id.mainViewImage);
 
-        id = (long) getIntent().getExtras().get("ID");
     }
 
     public void setMainViews(List<Note> list){

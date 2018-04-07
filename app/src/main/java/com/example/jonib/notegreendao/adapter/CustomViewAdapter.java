@@ -64,7 +64,8 @@ public class CustomViewAdapter extends RecyclerView.Adapter<CustomViewAdapter.Cu
 
         holder.title.setText(title);
         holder.description.setText(note.getDescription());
-        holder.circleText.setBackgroundResource(R.drawable.alarm_icon);
+        if(note.getReminderNotif())
+            holder.circleText.setBackgroundResource(R.drawable.alarm_icon);
         holder.date.setText(note.getDate());
 
         holder.cardView.setCardBackgroundColor(note.getItemColor());

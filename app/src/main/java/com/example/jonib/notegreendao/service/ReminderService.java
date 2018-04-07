@@ -1,54 +1,50 @@
 package com.example.jonib.notegreendao.service;
 
+import android.app.IntentService;
+import android.app.Notification;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import com.example.jonib.notegreendao.MainActivity;
+import com.example.jonib.notegreendao.MainViewActivity;
 import com.example.jonib.notegreendao.R;
 
-public class ReminderService extends Service {
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) { return null; }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId){
-
-        String state = intent.getExtras().getString("extra");
-
-        assert state != null;
+import java.util.Locale;
 
 
-        Intent main_intent = new Intent(this, MainActivity.class);
-        main_intent.setAction(Intent.ACTION_SHUTDOWN);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, main_intent, 0);
+public class ReminderService extends IntentService {
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, "id")
-                .setSmallIcon(R.mipmap.notification_opened_icon)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.notification_icon))
-                .setContentTitle("My notification")
-                .setContentText("Hello World!")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                // Set the intent that will fire when the user taps the notification
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+    private static final int NOTIFICATION_ID = 3;
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(0, mBuilder.build());
-
-        return START_NOT_STICKY;
+    public ReminderService() {
+        super("ReminderService");
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public IBinder onBind(Intent intent){
+        return null;
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        Intent notifyIntent = new Intent(this, MainViewActivity.class);
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 2, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification.Builder builder = new Notification.Builder(this)
+                .setContentTitle("My Title!")
+                .setContentText("This is the Body")
+                .setSmallIcon(R.mipmap.notification_opened_icon)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.launcher_icon))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        Notification notificationCompat = builder.build();
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
+
+        managerCompat.notify(NOTIFICATION_ID, notificationCompat);
     }
 }

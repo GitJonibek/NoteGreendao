@@ -22,6 +22,7 @@ public class Note {
     private String ImagePath;
     private String ImageName;
     private Integer ItemColor;
+    private Boolean ReminderNotif;
     private String Date;
 
     // KEEP FIELDS - put your custom fields here
@@ -36,13 +37,14 @@ public class Note {
     }
 
     @Generated
-    public Note(Long id, String Title, String Description, String ImagePath, String ImageName, Integer ItemColor, String Date) {
+    public Note(Long id, String Title, String Description, String ImagePath, String ImageName, Integer ItemColor, Boolean ReminderNotif, String Date) {
         this.id = id;
         this.Title = Title;
         this.Description = Description;
         this.ImagePath = ImagePath;
         this.ImageName = ImageName;
         this.ItemColor = ItemColor;
+        this.ReminderNotif = ReminderNotif;
         this.Date = Date;
     }
 
@@ -94,6 +96,14 @@ public class Note {
 
     public void setItemColor(Integer ItemColor) {
         this.ItemColor = ItemColor;
+    }
+
+    public Boolean getReminderNotif() {
+        return ReminderNotif;
+    }
+
+    public void setReminderNotif(Boolean ReminderNotif) {
+        this.ReminderNotif = ReminderNotif;
     }
 
     public String getDate() {
